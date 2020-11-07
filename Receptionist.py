@@ -1,3 +1,4 @@
+from typing import Text
 import discord
 import subprocess
 import asyncio
@@ -13,13 +14,49 @@ from discord.utils import get
 
 channels = []
 
-engine = pyttsx3.init()#pyttsx3 init
-rate = engine.getProperty('rate')
-engine.setProperty('rate', rate-30)
-voices = engine.getProperty('voices')
-for voice in voices:
-    if voice.name == 'Microsoft Haruka Desktop - Japanese':
-        engine.setProperty('voice', voice.id)
+class Language:
+
+
+    def __init__(self):
+        self.engine = self.pyttsx3.init() #pyttsx3 init
+        self.rate = self.engine.getProperty('rate')
+        self.engine.setProperty('rate', self.rate-30)
+
+    def jp_lang(self, name, text):
+        self.name = name
+        self.text = text
+        self.word = self.name + ' わ ' + self.text + 'と言った。'
+        voices = self.engine.getProperty('voices')
+        for voice in voices:
+            if voice.name == 'Microsoft Haruka Desktop - Japanese':
+                self.engine.setProperty('voice', voice.id)
+        
+        
+        self.engine.save_to_file(self.word, f'sound\{name}_typing.mp3')
+        self.engine.runAndWait()
+    
+    def en_lang(self, name, word):
+        self.name = name
+        self.word = word
+        voices = self.engine.getProperty('voices')
+        for voice in voices:
+            if voice.name == 'Microsoft David Desktop - English':
+                self.engine.setProperty('voice', voice.id)
+
+        self.engine.save_to_file(word, f'sound\{name}_typing.mp3')
+        self.engine.runAndWait()
+    
+    def th_lang(self, name, word):
+        self.name = name
+        self.word = word
+        voices = self.engine.getProperty('voices')
+        for voice in voices:
+            if voice.name == 'Microsoft Pattara Desktop - Thai':
+                self.engine.setProperty('voice', voice.id)
+
+        self.engine.save_to_file(word, f'sound\{name}_typing.mp3')
+        self.engine.runAndWait()
+            
 
 class Bot(commands.Bot):
 
@@ -78,16 +115,16 @@ class Music(commands.Cog):
             
             name = member.name
             text = f'{name} を入ります。'
-            engine.save_to_file(text , f'{name}_join.mp3')
+            engine.save_to_file(text , f'sound\{name}_join.mp3')
             engine.runAndWait()
             save = f"{name}_join.mp3"
 
-            url = r"C:\Users\ASUS G14\Desktop\bot\{}".format(save)
+            url = r"C:\Users\ASUS G14\Documents\psit_project\sound\{}".format(save)
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
             while player.is_playing:
                 await asyncio.sleep(1)
-            os.system(f'del /f "{save}"')
+            os.system(f'del /f "sound\{save}"')
         elif before.channel is not None and after.channel is None and int(member.id) == 372762649118638082:
             url = r"/home/diswave/NaiNuey.m4a"
             track1 = await self.bot.wavelink.get_tracks(url)
@@ -98,27 +135,27 @@ class Music(commands.Cog):
         elif before.self_mute is False and after.self_mute is True:
             name = member.name
             text = f'{name} の声をミュート。'
-            engine.save_to_file(text , f'{name}_mute.mp3')
+            engine.save_to_file(text , f'sound\{name}_mute.mp3')
             engine.runAndWait()
             save = f"{name}_mute.mp3"
 
-            url = r"C:\Users\ASUS G14\Desktop\bot\{}".format(save)
+            url = r"C:\Users\ASUS G14\Documents\psit_project\sound\{}".format(save)
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
             while player.is_playing:
                 await asyncio.sleep(1)
-            os.system(f'del /f "{save}"')
+            os.system(f'del /f "sound\{save}"')
         elif before.self_deaf is False and after.self_deaf is True:
             name = member.name
             text = f'{name} has become a deaf mute'
-            engine.save_to_file(text , f'{name}_deaf.mp3')
+            engine.save_to_file(text , f'sound\{name}_deaf.mp3')
             engine.runAndWait()
             save = f"{name}_deaf.mp3"
 
-            url = r"C:\Users\ASUS G14\Desktop\bot\{}".format(save)
+            url = r"C:\Users\ASUS G14\Documents\psit_project\sound\{}".format(save)
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
-            os.system(f'del /f "{save}"')
+            os.system(f'del /f "sound\{save}"')
 
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
@@ -152,6 +189,21 @@ class context(commands.Cog):
         async for message in channel.history(limit=50):
             await message.delete()
 
+    @commands.command(aliases=['pt'])
+    async def playtext(self, ctx, *, text :str):
+
+        player = self.bot.wavelink.get_player(ctx.guild.id)
+        name = ctx.author.name
+        
+        Language.jp_lang(name, text)
+
+        save = f"{name}_typing.mp3"
+
+        url = r"C:\Users\ASUS G14\Documents\psit_project\sound\{}".format(save)
+        track1 = await self.bot.wavelink.get_tracks(url)
+        await player.play(track1[0])
+        os.system(f'del /f "sound\{save}"')
+
     @commands.command()
     async def moverole(self, ctx, role: discord.Role, position: int):
         try:
@@ -172,4 +224,4 @@ class context(commands.Cog):
 
 
 bot = Bot()
-bot.run('Nzc0MzA3NDY2NzIwNDQ0NDQ2.X6V4Bg.4agL6PKMUAMu5I72ntfEPJRqAWs')
+bot.run(input())
