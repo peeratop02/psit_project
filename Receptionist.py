@@ -1,10 +1,8 @@
 import discord
-import subprocess
 import asyncio
 import wavelink
 from discord.ext import commands, tasks
 
-from gtts import gTTS
 import pyttsx3
 import os
 
@@ -78,11 +76,11 @@ class Music(commands.Cog):
             
             name = member.name
             text = f'{name} を入ります。'
-            engine.save_to_file(text , f'{name}_join.mp3')
+            engine.save_to_file(text , f'sound\{name}_join.mp3')
             engine.runAndWait()
             save = f"{name}_join.mp3"
 
-            url = r"C:\Users\ASUS G14\Desktop\bot\{}".format(save)
+            url = r"sound\{}".format(save)
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
             while player.is_playing:
@@ -98,11 +96,11 @@ class Music(commands.Cog):
         elif before.self_mute is False and after.self_mute is True:
             name = member.name
             text = f'{name} の声をミュート。'
-            engine.save_to_file(text , f'{name}_mute.mp3')
+            engine.save_to_file(text , f'sound\{name}_mute.mp3')
             engine.runAndWait()
             save = f"{name}_mute.mp3"
 
-            url = r"C:\Users\ASUS G14\Desktop\bot\{}".format(save)
+            url = r"sound\{}".format(save)
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
             while player.is_playing:
@@ -111,11 +109,11 @@ class Music(commands.Cog):
         elif before.self_deaf is False and after.self_deaf is True:
             name = member.name
             text = f'{name} has become a deaf mute'
-            engine.save_to_file(text , f'{name}_deaf.mp3')
+            engine.save_to_file(text , f'sound\{name}_deaf.mp3')
             engine.runAndWait()
             save = f"{name}_deaf.mp3"
 
-            url = r"C:\Users\ASUS G14\Desktop\bot\{}".format(save)
+            url = r"sound\{}".format(save)
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
             os.system(f'del /f "{save}"')
@@ -152,6 +150,27 @@ class context(commands.Cog):
         async for message in channel.history(limit=50):
             await message.delete()
 
+    @commands.command(aliases=['pt'])
+    async def playtext(self, ctx, *, text :str):
+
+        player = self.bot.wavelink.get_player(ctx.guild.id)
+        name = ctx.author.name
+
+        word = name + ' わ ' + text + 'と言った。'
+        engine.save_to_file(word, f'sound\{name}_type.mp3')
+        engine.runAndWait()
+
+        save = f'{name}_type.mp3'
+
+        url = r"sound\{}".format(save)
+        track1 = await self.bot.wavelink.get_tracks(url)
+        await player.play(track1[0])
+        while player.is_playing:
+                await asyncio.sleep(1)
+        os.system(f'del /f "{save}"')
+
+
+
     @commands.command()
     async def moverole(self, ctx, role: discord.Role, position: int):
         try:
@@ -172,4 +191,4 @@ class context(commands.Cog):
 
 
 bot = Bot()
-bot.run('Nzc0MzA3NDY2NzIwNDQ0NDQ2.X6V4Bg.4agL6PKMUAMu5I72ntfEPJRqAWs')
+bot.run(input())
