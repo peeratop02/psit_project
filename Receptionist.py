@@ -1,6 +1,7 @@
 import discord
 import asyncio
 import wavelink
+from time import sleep
 from discord.ext import commands, tasks
 
 import pyttsx3
@@ -99,13 +100,20 @@ class Music(commands.Cog):
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
             while player.is_playing:
-                await asyncio.sleep(1)
+                await sleep(1)
             os.system(f'del /f "{save}"')
 
 
         #---Custom Player Sound---#
         elif before.channel is not None and after.channel is None and int(member.id) == 372762649118638082:
             url = r"/home/diswave/NaiNuey.m4a"
+            track1 = await self.bot.wavelink.get_tracks(url)
+            await player.play(track1[0])
+        
+
+        #---Not Working---#
+        elif before.channel is None and after.channel is not None and int(member.id) == 336144056260231179:
+            url = r"sound\baka.mp3"
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
 
@@ -128,7 +136,7 @@ class Music(commands.Cog):
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
             while player.is_playing:
-                await asyncio.sleep(1)
+                await sleep(1)
             os.system(f'del /f "\sound\{save}"')
         
         
@@ -145,7 +153,7 @@ class Music(commands.Cog):
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
             while player.is_playing:
-                await asyncio.sleep(1)
+                await sleep(1)
             os.system(f'del /f "sound\{save}"')
         
         
@@ -161,6 +169,8 @@ class Music(commands.Cog):
             url = r"sound\{}".format(save)
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
+            while player.is_playing:
+                await sleep(1)
             os.system(f'del /f "sound\{save}"')
         
 
@@ -176,6 +186,8 @@ class Music(commands.Cog):
             url = r"sound\{}".format(save)
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
+            while player.is_playing:
+                await sleep(1)
             os.system(f'del /f "sound\{save}"')
 
 
@@ -231,8 +243,54 @@ class context(commands.Cog):
         track1 = await self.bot.wavelink.get_tracks(url)
         await player.play(track1[0])
         while player.is_playing:
-                await asyncio.sleep(1)
+            await sleep(1)
         os.system(f'del /f "{save}"')
+    
+    
+    #---Play Sound---$
+    @commands.command(aliases=['ps'])
+    async def playsound(self, ctx, *, text :str):
+
+        player = self.bot.wavelink.get_player(ctx.guild.id)
+
+        if text == 'baka':
+            url = r"sound\baka.mp3"
+
+        elif text == 'hee':
+            url = r"sound\hee.mp3"
+
+        elif text == 'sawasdee':
+            url = r"sound\sawasdee.mp3"
+
+        elif text == 'senpai':
+            url = r"sound\senpai_cut.mp3"
+
+        elif text == 'dio da':
+            url = r"sound\dio_da.mp3"
+        
+        elif text == 'wry':
+            url = r"sound\wry.mp3"
+
+        elif text == 'road roller':
+            url = r"sound\road_roller.mp3"
+
+        elif text == 'yes':
+            url = r"sound\yes_yes.mp3"
+
+        elif text == 'bruh':
+            url = r"sound\bruh.mp3"
+
+        elif text == 'simp':
+            url = r"sound\davie_simp.mp3"
+
+        elif text == 'kratuk':
+            url = r"sound\kratuk_jit.mp3"
+
+        elif text == 'dhee':
+            url = r"sound\double_hee.mp3"
+
+        track1 = await self.bot.wavelink.get_tracks(url)
+        await player.play(track1[0])
 
 
 
@@ -256,4 +314,4 @@ class context(commands.Cog):
 
 
 bot = Bot()
-bot.run(input())
+bot.run('Nzc0MzA3NDY2NzIwNDQ0NDQ2.X6V4Bg.KYALGV-0f1MABaC2ijoCgGmqMEU')
