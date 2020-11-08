@@ -314,4 +314,4 @@ class context(commands.Cog):
 
 
 bot = Bot()
-bot.run('Nzc0MzA3NDY2NzIwNDQ0NDQ2.X6V4Bg.KYALGV-0f1MABaC2ijoCgGmqMEU')
+bot.run(input())
