@@ -88,16 +88,21 @@ class Music(commands.Cog):
                 await player.connect(channel.id)
                 channels.append(channel.id)
 
-            
-            name = member.name
-            text = f'{name} を入ります。'
-            engine.save_to_file(text , f'sound\{name}_join.mp3')
-            engine.runAndWait()
-            save = f"{name}_join.mp3"
+                #---Call people with id---#
+                if int(member.id) == 336144056260231179: #change id here#
+                    url = r"sound\baka.mp3"
+                    track1 = await self.bot.wavelink.get_tracks(url)
+                    await player.play(track1[0])
+                else:
+                    name = member.name
+                    text = f'{name} を入ります。'
+                    engine.save_to_file(text , f'sound\{name}_join.mp3')
+                    engine.runAndWait()
+                    save = f"{name}_join.mp3"
 
-            url = r"sound\{}".format(save)
-            track1 = await self.bot.wavelink.get_tracks(url)
-            await player.play(track1[0])
+                    url = r"sound\{}".format(save)
+                    track1 = await self.bot.wavelink.get_tracks(url)
+                    await player.play(track1[0])
             while player.is_playing:
                 await asyncio.sleep(1)
             os.system(f'del /f "{save}"')
