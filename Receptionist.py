@@ -22,7 +22,7 @@ class Language:
         self.rate = self.engine.getProperty('rate')
         self.engine.setProperty('rate', self.rate-30)
 
-    def jp_lang(self, name, text):
+    def jp_type(self, name, text):
         self.name = name
         self.text = text
         self.word = self.name + ' わ ' + self.text + 'と言った。'
@@ -33,6 +33,18 @@ class Language:
         
         
         self.engine.save_to_file(self.word, f'sound\{name}_typing.mp3')
+        self.engine.runAndWait()
+
+    def jp_join(self,name):
+        self.name=name
+
+        text = f'{name} を入ります。'
+        voices = self.engine.getProperty('voices')
+        for voice in voices:
+            if voice.name == 'Microsoft Haruka Desktop - Japanese':
+                self.engine.setProperty('voice', voice.id)
+
+        self.engine.save_to_file(text , f'{name}_join.mp3')
         self.engine.runAndWait()
     
     def en_lang(self, name, word):
@@ -114,10 +126,8 @@ class Music(commands.Cog):
 
             
             name = member.name
-            text = f'{name} を入ります。'
-            engine.save_to_file(text , f'sound\{name}_join.mp3')
-            engine.runAndWait()
-            save = f"{name}_join.mp3"
+            
+            Language.jp_join(name)
 
             url = r"C:\Users\ASUS G14\Documents\psit_project\sound\{}".format(save)
             track1 = await self.bot.wavelink.get_tracks(url)
@@ -195,7 +205,7 @@ class context(commands.Cog):
         player = self.bot.wavelink.get_player(ctx.guild.id)
         name = ctx.author.name
         
-        Language.jp_lang(name, text)
+        Language.jp_type(self, name, text)
 
         save = f"{name}_typing.mp3"
 
