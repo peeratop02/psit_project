@@ -294,51 +294,37 @@ class context(commands.Cog):
         role = get(member.guild.roles, name=name)
         await member.add_roles(role)
 
-    #---Change language to english Command---#
+    #---Change language to english and japan Command---#
     @commands.command(aliases=['lg'])
     async def changelanguge(self, ctx, *, text :str):
         player = self.bot.wavelink.get_player(ctx.guild.id)
         name = ctx.author.name
 
         if text == "en":
+            engine = pyttsx3.init()
             rate = engine.getProperty('rate')
             engine.setProperty('rate', rate)
             voices = engine.getProperty('voices')
             for voice in voices:
                 if voice.name == 'Microsoft Zira Desktop - English (United States)':
                     engine.setProperty('voice', voice.id)
+                    word = name + ' Just change language to English '
+                    engine.save_to_file(word, f'sound\{name}_type.mp3')
+                    engine.runAndWait()
 
-        word = name + ' Just change language to English '
-        engine.save_to_file(word, f'sound\{name}_type.mp3')
-        engine.runAndWait()
-
-        save = f'{name}_type.mp3'
-
-        url = r"sound\{}".format(save)
-        track1 = await self.bot.wavelink.get_tracks(url)
-        await player.play(track1[0])
-        while player.is_playing:
-                await asyncio.sleep(1)
-        os.system(f'del /f "{save}"')
-
-    #---Change language to Japan Command---#
-    @commands.command(aliases=['lg'])
-    async def changelanguge(self, ctx, *, text :str):
-        player = self.bot.wavelink.get_player(ctx.guild.id)
-        name = ctx.author.name
-
-        if text == "jp":
+        #---Change language to Japan Command---#
+        elif text == "jp":
             engine = pyttsx3.init()#pyttsx3 init
             rate = engine.getProperty('rate')
-            engine.setProperty('rate', rate-30)
+            engine.setProperty('rate', rate)
             voices = engine.getProperty('voices')
             for voice in voices:
                 if voice.name == 'Microsoft Haruka Desktop - Japanese':
                     engine.setProperty('voice', voice.id)
+                    word = name + ' は日本語が変わりました。'
+                    engine.save_to_file(word, f'sound\{name}_type.mp3')
+                    engine.runAndWait()
 
-        word = name + ' は日本語が変わりました。'
-        engine.save_to_file(word, f'sound\{name}_type.mp3')
-        engine.runAndWait()
 
         save = f'{name}_type.mp3'
 
@@ -346,7 +332,7 @@ class context(commands.Cog):
         track1 = await self.bot.wavelink.get_tracks(url)
         await player.play(track1[0])
         while player.is_playing:
-                await asyncio.sleep(1)
+            await asyncio.sleep(1)
         os.system(f'del /f "{save}"')
         
 
