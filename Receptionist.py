@@ -11,7 +11,7 @@ from discord.utils import get
 
 channels = []
 
-#---Set narrator language---#
+#---Set Default Narrator Language---#
 
 engine = pyttsx3.init()#pyttsx3 init
 rate = engine.getProperty('rate')
@@ -78,6 +78,7 @@ class Music(commands.Cog):
     async def on_voice_state_update(self, member, before, after):
 
         player = self.bot.wavelink.get_player(member.guild.id)
+        voice1 = engine.getProperty('voice')
 
 
         #---Player Join---#
@@ -132,19 +133,20 @@ class Music(commands.Cog):
         elif before.self_mute is False and after.self_mute is True:
             """mute function"""
             name = member.name
+           
 
-            if voice.name == "Microsoft Haruka Desktop - Japanese":
+            if voice1 == "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_JA-JP_HARUKA_11.0":
                 text = f'{name} の声をミュート。'
 
-            elif voice.name == "Microsoft Zira Desktop - English (United States)":
+            elif voice1 == "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0":
                 text = f'{name} has muted their voice.'
     
             engine.save_to_file(text , f'sound\{name}_mute.mp3')
             engine.runAndWait()
             save = f"{name}_mute.mp3"
-
+       
             url = r"sound\{}".format(save)
-            track1 = await self.bot.wavelink.get_tracks(url)
+            track1 = await self.bot.wavelink.get_tracks(engine.say('hello'))
             await player.play(track1[0])
             while player.is_playing:
                 await asyncio.sleep(1)
