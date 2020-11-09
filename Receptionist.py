@@ -287,6 +287,35 @@ class context(commands.Cog):
                 await asyncio.sleep(1)
         os.system(f'del /f "{save}"')
 
+    #---Change language to Japan Command---#
+    @commands.command(aliases=['lg'])
+    async def changelanguge(self, ctx, *, text :str):
+        player = self.bot.wavelink.get_player(ctx.guild.id)
+        name = ctx.author.name
+
+        if text == "jp":
+            engine = pyttsx3.init()#pyttsx3 init
+            rate = engine.getProperty('rate')
+            engine.setProperty('rate', rate-30)
+            voices = engine.getProperty('voices')
+            for voice in voices:
+                if voice.name == 'Microsoft Haruka Desktop - Japanese':
+                    engine.setProperty('voice', voice.id)
+
+        word = name + ' は日本語が変わりました。'
+        engine.save_to_file(word, f'sound\{name}_type.mp3')
+        engine.runAndWait()
+
+        save = f'{name}_type.mp3'
+
+        url = r"sound\{}".format(save)
+        track1 = await self.bot.wavelink.get_tracks(url)
+        await player.play(track1[0])
+        while player.is_playing:
+                await asyncio.sleep(1)
+        os.system(f'del /f "{save}"')
+        
+
 
 bot = Bot()
 bot.run(input())
