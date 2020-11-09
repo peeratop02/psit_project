@@ -5,11 +5,12 @@ from discord.ext import commands, tasks
 
 import pyttsx3
 import os
-
+import urllib
 
 from discord.utils import get
 
 channels = []
+lang=[]
 
 #---Set Default Narrator Language---#
 
@@ -76,10 +77,15 @@ class Music(commands.Cog):
     #---Bot Narrator Section---#
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
+        member_channel=member.guild.id
+        def get_language(id :int):
+            for item in lang:
+                if str(item[:18])== str(member_channel):
+                    return str(item[19:])
+
 
         player = self.bot.wavelink.get_player(member.guild.id)
-        voice1 = engine.getProperty('voice')
-
+      
 
         #---Player Join---#
         if before.channel is None and after.channel is not None:
@@ -96,25 +102,26 @@ class Music(commands.Cog):
                 await player.play(track1[0])
             else:
                 name = member.name
-
-                if voice.name == "Microsoft Haruka Desktop - Japanese":
+                language=get_language(int(member.guild.id))
+                
+                if language=='ja':
                     text = f'{name} を入ります。'
-                    print(voice.name)
+                   
 
-                elif voice.name == "Microsoft Zira Desktop - English (United States)":
+                elif language=='en':
                     text = f'{name} has joined your channel.'
-                    print(voice.name)
                     
-                engine.save_to_file(text , f'sound\{name}_join.mp3')
-                engine.runAndWait()
-                save = f"{name}_join.mp3"
-
-                url = r"sound\{}".format(save)
+                else:
+                    
+                    thai = f'{name} ได้เข้าช่องสนทนานี้แล้ว'
+                    text=urllib.parse.quote_plus(thai)
+                    language='th'       
+             
+                url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
                 track1 = await self.bot.wavelink.get_tracks(url)
                 await player.play(track1[0])
-            while player.is_playing:
-                await asyncio.sleep(1)
-            os.system(f'del /f "{save}"')
+          
+          
 
 
         #---Custom Player Sound---#
@@ -133,21 +140,8 @@ class Music(commands.Cog):
         elif before.self_mute is False and after.self_mute is True:
             """mute function"""
             name = member.name
-<<<<<<< .merge_file_a04540
 
-            if voice.name == "Microsoft Haruka Desktop - Japanese":
-                text = f'{name} の声をミュート。'
-
-            elif voice.name == "Microsoft Zira Desktop - English (United States)":
-=======
-           
-
-            if voice1 == "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_JA-JP_HARUKA_11.0":
-                text = f'{name} の声をミュート。'
-
-            elif voice1 == "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0":
->>>>>>> .merge_file_a04156
-                text = f'{name} has muted their voice.'
+            text = f'{name} has muted their voice.'
     
             engine.save_to_file(text , f'sound\{name}_mute.mp3')
             engine.runAndWait()
@@ -307,46 +301,29 @@ class context(commands.Cog):
     #---Change language to english and japan Command---#
     @commands.command(aliases=['lg'])
     async def changelanguge(self, ctx, *, text :str):
+        global lang
         player = self.bot.wavelink.get_player(ctx.guild.id)
         name = ctx.author.name
+        member_channel=ctx.author.guild
 
         if text == "en":
-<<<<<<< .merge_file_a04540
-=======
-            engine = pyttsx3.init()
->>>>>>> .merge_file_a04156
-            rate = engine.getProperty('rate')
-            engine.setProperty('rate', rate)
-            voices = engine.getProperty('voices')
-            for voice in voices:
-                if voice.name == 'Microsoft Zira Desktop - English (United States)':
-                    engine.setProperty('voice', voice.id)
-                    word = name + ' Just change language to English '
-                    engine.save_to_file(word, f'sound\{name}_type.mp3')
-                    engine.runAndWait()
+            lang.append(f'{str(member_channel.id)}:en')
+            word = name + "%20has%20changed%20voice%20to%20english"
+            url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=en&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
+            track1 = await self.bot.wavelink.get_tracks(url)
+            await player.play(track1[0])
+            lang=list(set(lang))
+        
+            
 
         #---Change language to Japan Command---#
-        elif text == "jp":
-            engine = pyttsx3.init()#pyttsx3 init
-            rate = engine.getProperty('rate')
-            engine.setProperty('rate', rate)
-            voices = engine.getProperty('voices')
-            for voice in voices:
-                if voice.name == 'Microsoft Haruka Desktop - Japanese':
-                    engine.setProperty('voice', voice.id)
-                    word = name + ' は日本語が変わりました。'
-                    engine.save_to_file(word, f'sound\{name}_type.mp3')
-                    engine.runAndWait()
-
-
-        save = f'{name}_type.mp3'
-
-        url = r"sound\{}".format(save)
-        track1 = await self.bot.wavelink.get_tracks(url)
-        await player.play(track1[0])
-        while player.is_playing:
-            await asyncio.sleep(1)
-        os.system(f'del /f "{save}"')
+        elif text == "ja":
+            lang.append(f'{str(member_channel.id)}:ja')
+            word = name + '%20wanihongogakawarimashita'
+            url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=ja&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
+            track1 = await self.bot.wavelink.get_tracks(url)
+            await player.play(track1[0])
+            lang=list(set(lang))
         
 
 
