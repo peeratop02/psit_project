@@ -95,7 +95,15 @@ class Music(commands.Cog):
                 await player.play(track1[0])
             else:
                 name = member.name
-                text = f'{name} を入ります。'
+
+                if voice.name == "Microsoft Haruka Desktop - Japanese":
+                    text = f'{name} を入ります。'
+                    print(voice.name)
+
+                elif voice.name == "Microsoft Zira Desktop - English (United States)":
+                    text = f'{name} has joined your channel.'
+                    print(voice.name)
+                    
                 engine.save_to_file(text , f'sound\{name}_join.mp3')
                 engine.runAndWait()
                 save = f"{name}_join.mp3"
@@ -124,7 +132,13 @@ class Music(commands.Cog):
         elif before.self_mute is False and after.self_mute is True:
             """mute function"""
             name = member.name
-            text = f'{name} の声をミュート。'
+
+            if voice.name == "Microsoft Haruka Desktop - Japanese":
+                text = f'{name} の声をミュート。'
+
+            elif voice.name == "Microsoft Zira Desktop - English (United States)":
+                text = f'{name} has muted their voice.'
+    
             engine.save_to_file(text , f'sound\{name}_mute.mp3')
             engine.runAndWait()
             save = f"{name}_mute.mp3"
@@ -141,7 +155,12 @@ class Music(commands.Cog):
         elif before.self_mute is True and after.self_mute is False:
             """unmute function"""
             name = member.name
-            text = f'{name} の声をアンミュート。'
+            if voice.name == "Microsoft Haruka Desktop - Japanese":
+                text = f'{name} の声をアンミュート。'
+
+            elif voice.name == "Microsoft Zira Desktop - English (United States)":
+                text = f'{name} has unmuted their voice'
+
             engine.save_to_file(text , f'sound\{name}_unmute.mp3')
             engine.runAndWait()
             save = f"{name}_unmute.mp3"
@@ -158,7 +177,13 @@ class Music(commands.Cog):
         elif before.self_deaf is False and after.self_deaf is True:
             """deaf function"""
             name = member.name
-            text = f'{name} わ声が聞こえないになりました。'
+
+            if voice.name == "Microsoft Haruka Desktop - Japanese":
+                text = f'{name} わ声が聞こえないになりました。'
+
+            elif voice.name == "Microsoft Zira Desktop - English (United States)":
+                text = f'{name} has become a deaf mute.'
+                
             engine.save_to_file(text , f'sound\{name}_deaf.mp3')
             engine.runAndWait()
             save = f"{name}_deaf.mp3"
@@ -173,7 +198,12 @@ class Music(commands.Cog):
         elif before.self_deaf is True and after.self_deaf is False:
             """undeaf function"""
             name = member.name
-            text = f'{name} わ声が聞こえます。'
+            if voice.name == "Microsoft Haruka Desktop - Japanese":
+                text = f'{name} わ声が聞こえます。'
+
+            elif voice.name == "Microsoft Zira Desktop - English (United States)":
+                text = f'{name} has become normal.'
+                
             engine.save_to_file(text , f'sound\{name}_undeaf.mp3')
             engine.runAndWait()
             save = f"{name}_undeaf.mp3"
@@ -225,8 +255,13 @@ class context(commands.Cog):
 
         player = self.bot.wavelink.get_player(ctx.guild.id)
         name = ctx.author.name
+        
+        if voice.name == "Microsoft Haruka Desktop - Japanese":
+            word = name + ' わ ' + text + 'と言った。'
 
-        word = name + ' わ ' + text + 'と言った。'
+        elif voice.name == "Microsoft Zira Desktop - English (United States)":
+            word = name + ' say ' + text
+
         engine.save_to_file(word, f'sound\{name}_type.mp3')
         engine.runAndWait()
 
@@ -266,9 +301,8 @@ class context(commands.Cog):
         name = ctx.author.name
 
         if text == "en":
-            engine = pyttsx3.init()#pyttsx3 init
             rate = engine.getProperty('rate')
-            engine.setProperty('rate', rate-30)
+            engine.setProperty('rate', rate)
             voices = engine.getProperty('voices')
             for voice in voices:
                 if voice.name == 'Microsoft Zira Desktop - English (United States)':
