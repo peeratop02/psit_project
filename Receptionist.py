@@ -289,6 +289,15 @@ class context(commands.Cog):
         elif text == 'dhee':
             url = r"sound\double_hee.mp3"
 
+        elif text == 'nayok':
+            url = r"sound\nayok.mp3"
+
+        elif text == 'onii':
+            url = r"sound\oniichan.mp3"
+
+        elif text == 'fbi':
+            url = r"sound\fbi.mp3"
+
         track1 = await self.bot.wavelink.get_tracks(url)
         await player.play(track1[0])
 
