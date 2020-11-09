@@ -1,11 +1,8 @@
-from typing import Text
 import discord
-import subprocess
 import asyncio
 import wavelink
 from discord.ext import commands, tasks
 
-from gtts import gTTS
 import pyttsx3
 import os
 
@@ -14,66 +11,21 @@ from discord.utils import get
 
 channels = []
 
-class Language:
+#---Set narrator language---#
 
+engine = pyttsx3.init()#pyttsx3 init
+rate = engine.getProperty('rate')
+engine.setProperty('rate', rate-30)
+voices = engine.getProperty('voices')
+for voice in voices:
+    if voice.name == 'Microsoft Haruka Desktop - Japanese':
+        engine.setProperty('voice', voice.id)
 
-    def __init__(self):
-        self.engine = self.pyttsx3.init() #pyttsx3 init
-        self.rate = self.engine.getProperty('rate')
-        self.engine.setProperty('rate', self.rate-30)
-
-    def jp_type(self, name, text):
-        self.name = name
-        self.text = text
-        self.word = self.name + ' わ ' + self.text + 'と言った。'
-        voices = self.engine.getProperty('voices')
-        for voice in voices:
-            if voice.name == 'Microsoft Haruka Desktop - Japanese':
-                self.engine.setProperty('voice', voice.id)
-        
-        
-        self.engine.save_to_file(self.word, f'sound\{name}_typing.mp3')
-        self.engine.runAndWait()
-
-    def jp_join(self,name):
-        self.name=name
-
-        text = f'{name} を入ります。'
-        voices = self.engine.getProperty('voices')
-        for voice in voices:
-            if voice.name == 'Microsoft Haruka Desktop - Japanese':
-                self.engine.setProperty('voice', voice.id)
-
-        self.engine.save_to_file(text , f'{name}_join.mp3')
-        self.engine.runAndWait()
-    
-    def en_lang(self, name, word):
-        self.name = name
-        self.word = word
-        voices = self.engine.getProperty('voices')
-        for voice in voices:
-            if voice.name == 'Microsoft David Desktop - English':
-                self.engine.setProperty('voice', voice.id)
-
-        self.engine.save_to_file(word, f'sound\{name}_typing.mp3')
-        self.engine.runAndWait()
-    
-    def th_lang(self, name, word):
-        self.name = name
-        self.word = word
-        voices = self.engine.getProperty('voices')
-        for voice in voices:
-            if voice.name == 'Microsoft Pattara Desktop - Thai':
-                self.engine.setProperty('voice', voice.id)
-
-        self.engine.save_to_file(word, f'sound\{name}_typing.mp3')
-        self.engine.runAndWait()
-            
+#---Set default command---#
 
 class Bot(commands.Bot):
 
     
-
     def __init__(self):
         super(Bot, self).__init__(command_prefix=['/'])
 
@@ -84,9 +36,12 @@ class Bot(commands.Bot):
         print(f'Logged in as {self.user.name} | {self.user.id}')
         await self.change_presence(status=discord.Status.online, activity=discord.Game('/connect'))
 
+#---Bot action---#
 
 class Music(commands.Cog):
 
+
+    #---__init__---#
     def __init__(self, bot):
         self.bot = bot
 
@@ -96,6 +51,8 @@ class Music(commands.Cog):
         self.bot.loop.create_task(self.start_nodes())
         self.bot.remove_command("help")
 
+
+    #---Setting for connection to application.yml---#
     async def start_nodes(self):
         await self.bot.wait_until_ready()
 
@@ -106,6 +63,8 @@ class Music(commands.Cog):
                                               identifier='TEST',
                                               region='us_central')
 
+
+    #---Unknown---#
     @commands.command(name='connect')
     async def connect_(self, ctx, *, channel: discord.VoiceChannel = None):
 
@@ -113,10 +72,15 @@ class Music(commands.Cog):
         channel = ctx.author.voice.channel
         await player.connect(channel.id)
 
+
+    #---Bot Narrator Section---#
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
 
         player = self.bot.wavelink.get_player(member.guild.id)
+
+
+        #---Player Join---#
         if before.channel is None and after.channel is not None:
             channel = member.voice.channel
             #print(member.activities)
@@ -124,54 +88,109 @@ class Music(commands.Cog):
                 await player.connect(channel.id)
                 channels.append(channel.id)
 
-            
-            name = member.name
-            
-            Language.jp_join(name)
+        #---Call people with id---#
+            if int(member.id) == 195500932442750976: #change id here#
+                url = r"sound\baka.mp3"
+                track1 = await self.bot.wavelink.get_tracks(url)
+                await player.play(track1[0])
+            else:
+                name = member.name
+                text = f'{name} を入ります。'
+                engine.save_to_file(text , f'sound\{name}_join.mp3')
+                engine.runAndWait()
+                save = f"{name}_join.mp3"
 
-            url = r"C:\Users\ASUS G14\Documents\psit_project\sound\{}".format(save)
-            track1 = await self.bot.wavelink.get_tracks(url)
-            await player.play(track1[0])
+                url = r"sound\{}".format(save)
+                track1 = await self.bot.wavelink.get_tracks(url)
+                await player.play(track1[0])
             while player.is_playing:
                 await asyncio.sleep(1)
-            os.system(f'del /f "sound\{save}"')
+            os.system(f'del /f "{save}"')
+
+
+        #---Custom Player Sound---#
         elif before.channel is not None and after.channel is None and int(member.id) == 372762649118638082:
             url = r"/home/diswave/NaiNuey.m4a"
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
 
-        elif before.channel is not None and after.channel is None and int(member.id) == 755072422738133113:
+
+        #---Unknown---#
+        elif before.channel is not None and after.channel is None and int(member.id) == 774307466720444446: 
             await player.disconnect()
+        
+        
+        #---Player Mute---#
         elif before.self_mute is False and after.self_mute is True:
+            """mute function"""
             name = member.name
             text = f'{name} の声をミュート。'
             engine.save_to_file(text , f'sound\{name}_mute.mp3')
             engine.runAndWait()
             save = f"{name}_mute.mp3"
 
-            url = r"C:\Users\ASUS G14\Documents\psit_project\sound\{}".format(save)
+            url = r"sound\{}".format(save)
+            track1 = await self.bot.wavelink.get_tracks(url)
+            await player.play(track1[0])
+            while player.is_playing:
+                await asyncio.sleep(1)
+            os.system(f'del /f "\sound\{save}"')
+        
+        
+        #---Player Unmute---#
+        elif before.self_mute is True and after.self_mute is False:
+            """unmute function"""
+            name = member.name
+            text = f'{name} の声をアンミュート。'
+            engine.save_to_file(text , f'sound\{name}_unmute.mp3')
+            engine.runAndWait()
+            save = f"{name}_unmute.mp3"
+
+            url = r"sound\{}".format(save)
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
             while player.is_playing:
                 await asyncio.sleep(1)
             os.system(f'del /f "sound\{save}"')
+        
+        
+        #---Player Deaf---#
         elif before.self_deaf is False and after.self_deaf is True:
+            """deaf function"""
             name = member.name
-            text = f'{name} has become a deaf mute'
+            text = f'{name} わ声が聞こえないになりました。'
             engine.save_to_file(text , f'sound\{name}_deaf.mp3')
             engine.runAndWait()
             save = f"{name}_deaf.mp3"
 
-            url = r"C:\Users\ASUS G14\Documents\psit_project\sound\{}".format(save)
+            url = r"sound\{}".format(save)
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
             os.system(f'del /f "sound\{save}"')
+        
+
+        #---Player Undeaf---#
+        elif before.self_deaf is True and after.self_deaf is False:
+            """undeaf function"""
+            name = member.name
+            text = f'{name} わ声が聞こえます。'
+            engine.save_to_file(text , f'sound\{name}_undeaf.mp3')
+            engine.runAndWait()
+            save = f"{name}_undeaf.mp3"
+
+            url = r"sound\{}".format(save)
+            track1 = await self.bot.wavelink.get_tracks(url)
+            await player.play(track1[0])
+            os.system(f'del /f "sound\{save}"')
+
 
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
         if before.activities is not None and after.activities is not None:
             print(after.activities)
 
+
+#---Custom Command Section---#
 
 class context(commands.Cog):
     def __init__(self, bot):
@@ -199,20 +218,28 @@ class context(commands.Cog):
         async for message in channel.history(limit=50):
             await message.delete()
 
+
+    #---Play Text Command---#
     @commands.command(aliases=['pt'])
     async def playtext(self, ctx, *, text :str):
 
         player = self.bot.wavelink.get_player(ctx.guild.id)
         name = ctx.author.name
-        
-        Language.jp_type(self, name, text)
 
-        save = f"{name}_typing.mp3"
+        word = name + ' わ ' + text + 'と言った。'
+        engine.save_to_file(word, f'sound\{name}_type.mp3')
+        engine.runAndWait()
 
-        url = r"C:\Users\ASUS G14\Documents\psit_project\sound\{}".format(save)
+        save = f'{name}_type.mp3'
+
+        url = r"sound\{}".format(save)
         track1 = await self.bot.wavelink.get_tracks(url)
         await player.play(track1[0])
-        os.system(f'del /f "sound\{save}"')
+        while player.is_playing:
+                await asyncio.sleep(1)
+        os.system(f'del /f "{save}"')
+
+
 
     @commands.command()
     async def moverole(self, ctx, role: discord.Role, position: int):
@@ -231,6 +258,34 @@ class context(commands.Cog):
         member = ctx.message.author
         role = get(member.guild.roles, name=name)
         await member.add_roles(role)
+
+    #---Change language to english Command---#
+    @commands.command(aliases=['lg'])
+    async def changelanguge(self, ctx, *, text :str):
+        player = self.bot.wavelink.get_player(ctx.guild.id)
+        name = ctx.author.name
+
+        if text == "en":
+            engine = pyttsx3.init()#pyttsx3 init
+            rate = engine.getProperty('rate')
+            engine.setProperty('rate', rate-30)
+            voices = engine.getProperty('voices')
+            for voice in voices:
+                if voice.name == 'Microsoft Zira Desktop - English (United States)':
+                    engine.setProperty('voice', voice.id)
+
+        word = name + ' Just change language to English '
+        engine.save_to_file(word, f'sound\{name}_type.mp3')
+        engine.runAndWait()
+
+        save = f'{name}_type.mp3'
+
+        url = r"sound\{}".format(save)
+        track1 = await self.bot.wavelink.get_tracks(url)
+        await player.play(track1[0])
+        while player.is_playing:
+                await asyncio.sleep(1)
+        os.system(f'del /f "{save}"')
 
 
 bot = Bot()
