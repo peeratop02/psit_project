@@ -1,44 +1,38 @@
-import discord
-import asyncio
-import wavelink
+import discord #-Import Discord Library
+import asyncio #-Import Asyncio Library
+import wavelink #-Import Wavelink Library
+import os #-Import OS
+import urllib #-Import Url Converter Library
+
 from discord.ext import commands, tasks
-
-import pyttsx3
-import os
-import urllib
-
 from discord.utils import get
 
+#---List Cantain Channel That Bot Is Connected--#
 channels = []
+
+#---List Contain Language Settings---#
 lang=[]
 
-#---Set Default Narrator Language---#
 
-engine = pyttsx3.init()#pyttsx3 init
-rate = engine.getProperty('rate')
-engine.setProperty('rate', rate-30)
-voices = engine.getProperty('voices')
-for voice in voices:
-    if voice.name == 'Microsoft Haruka Desktop - Japanese':
-        engine.setProperty('voice', voice.id)
-
-#---Set default command---#
-
+#---Bot Default Settings---#
 class Bot(commands.Bot):
 
-    
+
+    #---Set Bot Command Prefix---#
     def __init__(self):
         super(Bot, self).__init__(command_prefix=['/'])
 
         self.add_cog(Music(self))
         self.add_cog(context(self))
 
+
+    #---Set Bot Status---#
     async def on_ready(self):
         print(f'Logged in as {self.user.name} | {self.user.id}')
-        await self.change_presence(status=discord.Status.online, activity=discord.Game('/connect'))
+        await self.change_presence(status=discord.Status.online, activity=discord.Game(name = 'EZ-VPS.CO'))
+
 
 #---Bot action---#
-
 class Music(commands.Cog):
 
 
@@ -53,7 +47,7 @@ class Music(commands.Cog):
         self.bot.remove_command("help")
 
 
-    #---Setting for connection to application.yml---#
+    #---Setting For Connection To application.yml---#
     async def start_nodes(self):
         await self.bot.wait_until_ready()
 
@@ -65,7 +59,7 @@ class Music(commands.Cog):
                                               region='us_central')
 
 
-    #---Unknown---#
+    #---/Connect Command---#
     @commands.command(name='connect')
     async def connect_(self, ctx, *, channel: discord.VoiceChannel = None):
 
@@ -74,18 +68,24 @@ class Music(commands.Cog):
         await player.connect(channel.id)
 
 
-    #---Bot Narrator Section---#
+    #---Member Action Section---#
     @commands.Cog.listener()
+
+    #---Member Interaction Section---#
     async def on_voice_state_update(self, member, before, after):
+
+        #---Get Channel ID---#
         member_channel=member.guild.id
+
+        #---Get Language From Lang---#
         def get_language(id :int):
             for item in lang:
                 if str(item[:18])== str(member_channel):
                     return str(item[19:])
 
 
+        #---Get Player ID---#
         player = self.bot.wavelink.get_player(member.guild.id)
-
 
         #---Player Join---#
         if before.channel is None and after.channel is not None:
@@ -95,33 +95,36 @@ class Music(commands.Cog):
                 await player.connect(channel.id)
                 channels.append(channel.id)
 
-        #---Call people with id---#
+        #---Call People With ID Or Not---#
             if int(member.id) == 195500932442750976: #change id here#
                 url = r"sound\baka.mp3"
                 track1 = await self.bot.wavelink.get_tracks(url)
                 await player.play(track1[0])
+            
             else:
                 name = member.name
                 language=get_language(int(member.guild.id))
-                
-                if language=='ja':
-                    text = f'{name} を入ります。'
-                   
 
+                #---Japanese Language---#
+                if language=='ja':
+                    jap = f'{name} を入ります。'
+                    text = urllib.parse.quote_plus(jap)
+
+                #---English Language---#
                 elif language=='en':
-                    text = f'{name} has joined your channel.'
-                    
+                    text = f'{name}%20has%20joined%20your%20channel'
+
+                #---Thai Language---#
                 else:
-                    
                     thai = f'{name} ได้เข้าช่องสนทนานี้แล้ว'
-                    text=urllib.parse.quote_plus(thai)
-                    language='th'       
-             
+                    text = urllib.parse.quote_plus(thai)
+                    language = 'th'
+
+                #---Play File From URL---#
                 url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
                 track1 = await self.bot.wavelink.get_tracks(url)
                 await player.play(track1[0])
-          
-          
+
 
 
         #---Custom Player Sound---#
@@ -143,21 +146,25 @@ class Music(commands.Cog):
 
             language = get_language(int(member.guild.id))
 
+
             if language=='ja':
-                text = f'{name} を入ります。'
-                   
+                jap = f'{name} を入ります。'
+                text = urllib.parse.quote_plus(jap)
+
 
             elif language=='en':
-                text = f'{name} has muted their voice.'
-                    
+                text = f'{name}%20has%20muted%20their%20voice'
+
+
             else:
-                thai = f'{name} ได้ปิดเสียงไมค์ตัวเอง'
-                text=urllib.parse.quote_plus(thai)
-                language='th'       
-             
-                url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
-                track1 = await self.bot.wavelink.get_tracks(url)
-                await player.play(track1[0])
+                thai = f'{name} ได้ปิดเสียงตัวเอง'
+                text = urllib.parse.quote_plus(thai)
+                language = 'th'
+
+
+            url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
+            track1 = await self.bot.wavelink.get_tracks(url)
+            await player.play(track1[0])
         
         
         #---Player Unmute---#
@@ -166,22 +173,25 @@ class Music(commands.Cog):
             name = member.name
 
             language = get_language(int(member.guild.id))
+
             
             if language=='ja':
-                text = f'{name} の声をアンミュート。'
-                   
+                jap = f'{name} の声をアンミュート。'
+                text=urllib.parse.quote_plus(jap)
+
 
             elif language=='en':
-                text = f'{name} has unmuted their voice.'
-                    
+                text = f'{name}%20has%20unmuted%20their%20voice'
+
             else:
-                thai = f'{name} ได้เปิดเสียงไมค์ตัวเองกลับแล้ว'
+                thai = f'{name} ได้เปิดเสียงตัวเองกลับแล้ว'
                 text=urllib.parse.quote_plus(thai)
-                language='th'       
-             
-                url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
-                track1 = await self.bot.wavelink.get_tracks(url)
-                await player.play(track1[0])
+                language = 'th'
+
+
+            url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
+            track1 = await self.bot.wavelink.get_tracks(url)
+            await player.play(track1[0])
         
         
         #---Player Deaf---#
@@ -189,40 +199,51 @@ class Music(commands.Cog):
             """deaf function"""
             name = member.name
 
-            if voice.name == "Microsoft Haruka Desktop - Japanese":
-                text = f'{name} わ声が聞こえないになりました。'
+            language=get_language(int(member.guild.id))
 
-            elif voice.name == "Microsoft Zira Desktop - English (United States)":
-                text = f'{name} has become a deaf mute.'
-                
-            engine.save_to_file(text , f'sound\{name}_deaf.mp3')
-            engine.runAndWait()
-            save = f"{name}_deaf.mp3"
+            if language=='ja':
+                jap = f'{name} わ声が聞こえないになりました。'
+                text=urllib.parse.quote_plus(jap)
 
-            url = r"sound\{}".format(save)
+
+            elif language=='en':
+                text = f'{name}%20has%20become%20deaf%20mute'
+
+            else:
+                thai = f'{name} ได้ปิดการได้ยินตัวเอง'
+                text=urllib.parse.quote_plus(thai)
+                language = 'th'
+
+
+            url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
-            os.system(f'del /f "sound\{save}"')
         
 
         #---Player Undeaf---#
         elif before.self_deaf is True and after.self_deaf is False:
             """undeaf function"""
             name = member.name
-            if voice.name == "Microsoft Haruka Desktop - Japanese":
-                text = f'{name} わ声が聞こえます。'
 
-            elif voice.name == "Microsoft Zira Desktop - English (United States)":
-                text = f'{name} has become normal.'
-                
-            engine.save_to_file(text , f'sound\{name}_undeaf.mp3')
-            engine.runAndWait()
-            save = f"{name}_undeaf.mp3"
+            language=get_language(int(member.guild.id))
 
-            url = r"sound\{}".format(save)
+            if language=='ja':
+                jap = f'{name} わ声が聞こえます。'
+                text=urllib.parse.quote_plus(jap)
+
+
+            elif language=='en':
+                text = f'{name}%20has%20become%20normal'
+
+            else:
+                thai = f'{name} ได้เปิดการได้ยินกลับแล้ว'
+                text=urllib.parse.quote_plus(thai)
+                language = 'th'
+
+
+            url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
-            os.system(f'del /f "sound\{save}"')
 
 
     @commands.Cog.listener()
@@ -237,22 +258,7 @@ class context(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-   # @commands.command(aliases=['s', 'solve'])
-   # async def solves(self, ctx, *, query: str):
-   #     txt = ''
-     #   for i in query:
-     #       txt = query.replace('+', ' plus ')
-    #    res = client.query(txt, scantimeout=6, podstate='Step-by-step solution', format='plaintext')
 
-    #    await ctx.send(next(res.results).text)
-        #    for i in l:
-   #     #    if 'Solutions' or 'solutions' or 'solution' or 'Solution' in i:
-        #       print(i)
- #       for pod in res.pods:
-   #         for sub in pod.subpods:
-    #            if sub.title == 'Possible intermediate steps':
-      #              await ctx.send(f'Solutions: \n {sub.plaintext}')
-#
     @commands.command(aliases=['cl'])
     async def clear(self, ctx):
         channel = ctx.message.channel
@@ -264,26 +270,38 @@ class context(commands.Cog):
     @commands.command(aliases=['pt'])
     async def playtext(self, ctx, *, text :str):
 
+        def get_language(id :int):
+            for item in lang:
+                if str(item[:18])== str(member_channel):
+                    return str(item[19:])
+        
+        member_channel=ctx.guild.id
+
         player = self.bot.wavelink.get_player(ctx.guild.id)
         name = ctx.author.name
-        
-        if voice.name == "Microsoft Haruka Desktop - Japanese":
-            word = name + ' わ ' + text + 'と言った。'
 
-        elif voice.name == "Microsoft Zira Desktop - English (United States)":
-            word = name + ' say ' + text
 
-        engine.save_to_file(word, f'sound\{name}_type.mp3')
-        engine.runAndWait()
+        language=get_language(int(ctx.guild.id))
 
-        save = f'{name}_type.mp3'
 
-        url = r"sound\{}".format(save)
+        if language=='ja':
+            jap = f'{name} わ {text} と言った。'
+            text=urllib.parse.quote_plus(jap)
+
+
+        elif language=='en':
+            eng = f'{name} say {text}'
+            text = urllib.parse.quote_plus(eng)
+
+        else:
+            thai = f'{name} พูดว่า {text}'
+            text=urllib.parse.quote_plus(thai)
+            language = 'th'
+
+
+        url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
         track1 = await self.bot.wavelink.get_tracks(url)
         await player.play(track1[0])
-        while player.is_playing:
-                await asyncio.sleep(1)
-        os.system(f'del /f "{save}"')
 
 
 
@@ -311,27 +329,71 @@ class context(commands.Cog):
         global lang
         player = self.bot.wavelink.get_player(ctx.guild.id)
         name = ctx.author.name
-        member_channel=ctx.author.guild
+        member_channel=ctx.guild.id
+
+        def get_language(id :int):
+            for item in lang:
+                if str(item[:18])== str(member_channel): #
+                    return str(item[19:])
 
         if text == "en":
-            lang.append(f'{str(member_channel.id)}:en')
-            word = name + "%20has%20changed%20voice%20to%20english"
+            if get_language(int(member_channel)) is not None:
+                for i in range(len(lang)):
+                    if lang[i][:18] == str(member_channel):
+                        lang[i] = f'{member_channel}:en'
+
+            else:
+                lang.append(f'{str(member_channel)}:en')
+
+            
+           
+            en=name + "has changed voice to english"
+            word = urllib.parse.quote_plus(en)
             url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=en&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
-            lang=list(set(lang))
-        
-            
+            print(lang)
+
 
         #---Change language to Japan Command---#
         elif text == "ja":
-            lang.append(f'{str(member_channel.id)}:ja')
-            word = name + '%20wanihongogakawarimashita'
+
+            if get_language(int(member_channel)) is not None:
+                for i in range(len(lang)):
+                    if lang[i][:18] == str(member_channel):
+                        lang[i] = f'{member_channel}:ja'
+                        
+                        print(lang)
+
+            else:
+                lang.append(f'{str(member_channel)}:ja')
+
+            ja= name + 'wanihongogakawarimashita'
+            word =urllib.parse.quote_plus(ja)
+            
             url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=ja&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
-            lang=list(set(lang))
+            print(lang)
         
+        
+        elif text == "th":
+
+            if get_language(int(member_channel)) is not None:
+               for i in range(len(lang)):
+                    if lang[i][:18] == str(member_channel):
+                        lang[i] = f'{member_channel}:th'
+
+            else:
+                lang.append(f'{str(member_channel)}:th')
+
+
+            thai = f'{name} ได้เปลี่ยนภาษาเป็นภาษาไทย'
+            word = urllib.parse.quote_plus(thai)
+            url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=th&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
+            track1 = await self.bot.wavelink.get_tracks(url)
+            await player.play(track1[0])
+
 
 
 bot = Bot()
