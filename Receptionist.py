@@ -1,20 +1,8 @@
-<<<<<<< HEAD
-import discord
-import asyncio
-import wavelink
-from time import sleep
-from discord.ext import commands, tasks
-
-import pyttsx3
-import os
-
-=======
 import discord #-Import Discord Library
 import asyncio #-Import Asyncio Library
 import wavelink #-Import Wavelink Library
 import os #-Import OS
 import urllib #-Import Url Converter Library
->>>>>>> lang_option
 
 from discord.ext import commands, tasks
 from discord.utils import get
@@ -22,23 +10,6 @@ from discord.utils import get
 #---List Cantain Channel That Bot Is Connected--#
 channels = []
 
-<<<<<<< HEAD
-#---Set narrator language---#
-
-engine = pyttsx3.init()#pyttsx3 init
-rate = engine.getProperty('rate')
-engine.setProperty('rate', rate-30)
-voices = engine.getProperty('voices')
-for voice in voices:
-    if voice.name == 'Microsoft Haruka Desktop - Japanese':
-        engine.setProperty('voice', voice.id)
-
-#---Set default command---#
-
-class Bot(commands.Bot):
-
-    
-=======
 #---List Contain Language Settings---#
 lang=[]
 
@@ -48,7 +19,6 @@ class Bot(commands.Bot):
 
 
     #---Set Bot Command Prefix---#
->>>>>>> lang_option
     def __init__(self):
         super(Bot, self).__init__(command_prefix=['/'])
 
@@ -78,11 +48,7 @@ class Music(commands.Cog):
         self.bot.remove_command("help")
 
 
-<<<<<<< HEAD
-    #---Setting for connection to application.yml---#
-=======
     #---Setting For Connection To application.yml---#
->>>>>>> lang_option
     async def start_nodes(self):
         await self.bot.wait_until_ready()
 
@@ -94,11 +60,7 @@ class Music(commands.Cog):
                                               region='us_central')
 
 
-<<<<<<< HEAD
-    #---Unknown---#
-=======
     #---/Connect Command---#
->>>>>>> lang_option
     @commands.command(name='connect')
     async def connect_(self, ctx, *, channel: discord.VoiceChannel = None):
 
@@ -107,11 +69,7 @@ class Music(commands.Cog):
         await player.connect(channel.id)
 
 
-<<<<<<< HEAD
-    #---Bot Narrator Section---#
-=======
     #---Member Action Section---#
->>>>>>> lang_option
     @commands.Cog.listener()
 
     #---Member Interaction Section---#
@@ -130,10 +88,6 @@ class Music(commands.Cog):
         #---Get Player ID---#
         player = self.bot.wavelink.get_player(member.guild.id)
 
-<<<<<<< HEAD
-
-=======
->>>>>>> lang_option
         #---Player Join---#
         if before.channel is None and after.channel is not None:
             channel = member.voice.channel
@@ -148,20 +102,6 @@ class Music(commands.Cog):
                 track1 = await self.bot.wavelink.get_tracks(url)
                 await player.play(track1[0])
             
-<<<<<<< HEAD
-            name = member.name
-            text = f'{name} を入ります。'
-            engine.save_to_file(text , f'sound\{name}_join.mp3')
-            engine.runAndWait()
-            save = f"{name}_join.mp3"
-
-            url = r"sound\{}".format(save)
-            track1 = await self.bot.wavelink.get_tracks(url)
-            await player.play(track1[0])
-            while player.is_playing:
-                await sleep(1)
-            os.system(f'del /f "{save}"')
-=======
             else:
                 name = member.name
                 language=get_language(int(member.guild.id))
@@ -186,7 +126,6 @@ class Music(commands.Cog):
                 track1 = await self.bot.wavelink.get_tracks(url)
                 await player.play(track1[0])
 
->>>>>>> lang_option
 
 
         #---Custom Player Sound---#
@@ -211,37 +150,6 @@ class Music(commands.Cog):
         #---Player Mute---#
         elif before.self_mute is False and after.self_mute is True:
             """mute function"""
-<<<<<<< HEAD
-            name = member.name
-            text = f'{name} の声をミュート。'
-            engine.save_to_file(text , f'sound\{name}_mute.mp3')
-            engine.runAndWait()
-            save = f"{name}_mute.mp3"
-
-            url = r"sound\{}".format(save)
-            track1 = await self.bot.wavelink.get_tracks(url)
-            await player.play(track1[0])
-            while player.is_playing:
-                await sleep(1)
-            os.system(f'del /f "\sound\{save}"')
-        
-        
-        #---Player Unmute---#
-        elif before.self_mute is True and after.self_mute is False:
-            """unmute function"""
-            name = member.name
-            text = f'{name} の声をアンミュート。'
-            engine.save_to_file(text , f'sound\{name}_unmute.mp3')
-            engine.runAndWait()
-            save = f"{name}_unmute.mp3"
-
-            url = r"sound\{}".format(save)
-            track1 = await self.bot.wavelink.get_tracks(url)
-            await player.play(track1[0])
-            while player.is_playing:
-                await sleep(1)
-            os.system(f'del /f "sound\{save}"')
-=======
             name = member.name
 
             language = get_language(int(member.guild.id))
@@ -292,43 +200,11 @@ class Music(commands.Cog):
             url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
->>>>>>> lang_option
         
         
         #---Player Deaf---#
         elif before.self_deaf is False and after.self_deaf is True:
             """deaf function"""
-<<<<<<< HEAD
-            name = member.name
-            text = f'{name} わ声が聞こえないになりました。'
-            engine.save_to_file(text , f'sound\{name}_deaf.mp3')
-            engine.runAndWait()
-            save = f"{name}_deaf.mp3"
-
-            url = r"sound\{}".format(save)
-            track1 = await self.bot.wavelink.get_tracks(url)
-            await player.play(track1[0])
-            while player.is_playing:
-                await sleep(1)
-            os.system(f'del /f "sound\{save}"')
-        
-
-        #---Player Undeaf---#
-        elif before.self_deaf is True and after.self_deaf is False:
-            """undeaf function"""
-            name = member.name
-            text = f'{name} わ声が聞こえます。'
-            engine.save_to_file(text , f'sound\{name}_undeaf.mp3')
-            engine.runAndWait()
-            save = f"{name}_undeaf.mp3"
-
-            url = r"sound\{}".format(save)
-            track1 = await self.bot.wavelink.get_tracks(url)
-            await player.play(track1[0])
-            while player.is_playing:
-                await sleep(1)
-            os.system(f'del /f "sound\{save}"')
-=======
             name = member.name
 
             language=get_language(int(member.guild.id))
@@ -376,7 +252,6 @@ class Music(commands.Cog):
             url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
->>>>>>> lang_option
 
 
     @commands.Cog.listener()
@@ -403,94 +278,6 @@ class context(commands.Cog):
     @commands.command(aliases=['pt'])
     async def playtext(self, ctx, *, text :str):
 
-<<<<<<< HEAD
-        player = self.bot.wavelink.get_player(ctx.guild.id)
-        name = ctx.author.name
-
-        word = name + ' わ ' + text + 'と言った。'
-        engine.save_to_file(word, f'sound\{name}_type.mp3')
-        engine.runAndWait()
-
-        save = f'{name}_type.mp3'
-
-        url = r"sound\{}".format(save)
-        track1 = await self.bot.wavelink.get_tracks(url)
-        await player.play(track1[0])
-        while player.is_playing:
-            await sleep(1)
-        os.system(f'del /f "{save}"')
-    
-    
-    #---Play Sound---$
-    @commands.command(aliases=['ps'])
-    async def playsound(self, ctx, *, text :str):
-
-        player = self.bot.wavelink.get_player(ctx.guild.id)
-
-        if text == 'baka':
-            url = r"sound\baka.mp3"
-
-        elif text == 'hee':
-            url = r"sound\hee.mp3"
-
-        elif text == 'sawasdee':
-            url = r"sound\sawasdee.mp3"
-
-        elif text == 'senpai':
-            url = r"sound\senpai_cut.mp3"
-
-        elif text == 'dio da':
-            url = r"sound\dio_da.mp3"
-        
-        elif text == 'wry':
-            url = r"sound\wry.mp3"
-
-        elif text == 'road roller':
-            url = r"sound\road_roller.mp3"
-
-        elif text == 'yes':
-            url = r"sound\yes_yes.mp3"
-
-        elif text == 'bruh':
-            url = r"sound\bruh.mp3"
-
-        elif text == 'simp':
-            url = r"sound\davie_simp.mp3"
-
-        elif text == 'kratuk':
-            url = r"sound\kratuk_jit.mp3"
-
-        elif text == 'dhee':
-            url = r"sound\double_hee.mp3"
-
-        elif text == 'nayok':
-            url = r"sound\nayok.mp3"
-
-        elif text == 'onii':
-            url = r"sound\oniichan.mp3"
-
-        elif text == 'fbi':
-            url = r"sound\fbi.mp3"
-
-        elif text == 'clap':
-            url = r"sound\applause.mp3"
-            
-        elif text == 'Blackpink1':
-            url = r"sound\blackpink1.mp3"
-        
-        elif text == 'Blackpink2':
-            url = r"sound\blackpink2.mp3"
-
-        elif text == 'Blackpink3':
-            url = r"sound\blackpink3.mp3"
-        
-        elif text == 'Lovesick':
-            url = r"sound\blackpink4.mp3"
-        
-        elif text == 'HYLT':
-            url = r"sound\HYLT.mp3"
-
-=======
         def get_language(id :int):
             for item in lang:
                 if str(item[:18])== str(member_channel):
@@ -521,7 +308,6 @@ class context(commands.Cog):
 
 
         url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
->>>>>>> lang_option
         track1 = await self.bot.wavelink.get_tracks(url)
         await player.play(track1[0])
 
@@ -616,6 +402,78 @@ class context(commands.Cog):
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
 
+
+    #---Play Sound---$
+    @commands.command(aliases=['ps'])
+    async def playsound(self, ctx, *, text :str):
+
+        player = self.bot.wavelink.get_player(ctx.guild.id)
+
+        if text == 'baka':
+            url = r"sound\baka.mp3"
+
+        elif text == 'hee':
+            url = r"sound\hee.mp3"
+
+        elif text == 'sawasdee':
+            url = r"sound\sawasdee.mp3"
+
+        elif text == 'senpai':
+            url = r"sound\senpai_cut.mp3"
+
+        elif text == 'dio da':
+            url = r"sound\dio_da.mp3"
+        
+        elif text == 'wry':
+            url = r"sound\wry.mp3"
+
+        elif text == 'road roller':
+            url = r"sound\road_roller.mp3"
+
+        elif text == 'yes':
+            url = r"sound\yes_yes.mp3"
+
+        elif text == 'bruh':
+            url = r"sound\bruh.mp3"
+
+        elif text == 'simp':
+            url = r"sound\davie_simp.mp3"
+
+        elif text == 'kratuk':
+            url = r"sound\kratuk_jit.mp3"
+
+        elif text == 'dhee':
+            url = r"sound\double_hee.mp3"
+
+        elif text == 'nayok':
+            url = r"sound\nayok.mp3"
+
+        elif text == 'onii':
+            url = r"sound\oniichan.mp3"
+
+        elif text == 'fbi':
+            url = r"sound\fbi.mp3"
+
+        elif text == 'clap':
+            url = r"sound\applause.mp3"
+            
+        elif text == 'Blackpink1':
+            url = r"sound\blackpink1.mp3"
+        
+        elif text == 'Blackpink2':
+            url = r"sound\blackpink2.mp3"
+
+        elif text == 'Blackpink3':
+            url = r"sound\blackpink3.mp3"
+        
+        elif text == 'Lovesick':
+            url = r"sound\blackpink4.mp3"
+        
+        elif text == 'HYLT':
+            url = r"sound\HYLT.mp3"
+
+        track1 = await self.bot.wavelink.get_tracks(url)
+        await player.play(track1[0])
 
 
 bot = Bot()
