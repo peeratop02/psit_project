@@ -108,7 +108,7 @@ class Music(commands.Cog):
 
                 #---Japanese Language---#
                 if language=='ja':
-                    jap = f'{name} を入ります。'
+                    jap = f'{name} wahairimasu'
                     text = urllib.parse.quote_plus(jap)
 
                 #---English Language---#
@@ -156,7 +156,7 @@ class Music(commands.Cog):
 
 
             if language=='ja':
-                jap = f'{name} を入ります。'
+                jap = f'{name} nokoewomyutodesu'
                 text = urllib.parse.quote_plus(jap)
 
 
@@ -184,7 +184,7 @@ class Music(commands.Cog):
 
             
             if language=='ja':
-                jap = f'{name} の声をアンミュート。'
+                jap = f'{name} nokoewoanmyutodesu'
                 text=urllib.parse.quote_plus(jap)
 
 
@@ -210,7 +210,7 @@ class Music(commands.Cog):
             language=get_language(int(member.guild.id))
 
             if language=='ja':
-                jap = f'{name} わ声が聞こえないになりました。'
+                jap = f'{name} wakoegakikoenaininarimashita'
                 text=urllib.parse.quote_plus(jap)
 
 
@@ -236,7 +236,7 @@ class Music(commands.Cog):
             language=get_language(int(member.guild.id))
 
             if language=='ja':
-                jap = f'{name} わ声が聞こえます。'
+                jap = f'{name} wakoegakikoemasu'
                 text=urllib.parse.quote_plus(jap)
 
 
@@ -293,7 +293,7 @@ class context(commands.Cog):
 
 
         if language=='ja':
-            jap = f'{name} わ {text} と言った。'
+            jap = f'{name} wa {text} toitta'
             text=urllib.parse.quote_plus(jap)
 
 
