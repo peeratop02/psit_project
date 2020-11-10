@@ -85,7 +85,7 @@ class Music(commands.Cog):
 
 
         player = self.bot.wavelink.get_player(member.guild.id)
-      
+
 
         #---Player Join---#
         if before.channel is None and after.channel is not None:
@@ -141,40 +141,47 @@ class Music(commands.Cog):
             """mute function"""
             name = member.name
 
-            text = f'{name} has muted their voice.'
-    
-            engine.save_to_file(text , f'sound\{name}_mute.mp3')
-            engine.runAndWait()
-            save = f"{name}_mute.mp3"
-       
-            url = r"sound\{}".format(save)
-            track1 = await self.bot.wavelink.get_tracks(engine.say('hello'))
-            await player.play(track1[0])
-            while player.is_playing:
-                await asyncio.sleep(1)
-            os.system(f'del /f "\sound\{save}"')
+            language = get_language(int(member.guild.id))
+
+            if language=='ja':
+                text = f'{name} を入ります。'
+                   
+
+            elif language=='en':
+                text = f'{name} has muted their voice.'
+                    
+            else:
+                thai = f'{name} ได้ปิดเสียงไมค์ตัวเอง'
+                text=urllib.parse.quote_plus(thai)
+                language='th'       
+             
+                url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
+                track1 = await self.bot.wavelink.get_tracks(url)
+                await player.play(track1[0])
         
         
         #---Player Unmute---#
         elif before.self_mute is True and after.self_mute is False:
             """unmute function"""
             name = member.name
-            if voice.name == "Microsoft Haruka Desktop - Japanese":
+
+            language = get_language(int(member.guild.id))
+            
+            if language=='ja':
                 text = f'{name} の声をアンミュート。'
+                   
 
-            elif voice.name == "Microsoft Zira Desktop - English (United States)":
-                text = f'{name} has unmuted their voice'
-
-            engine.save_to_file(text , f'sound\{name}_unmute.mp3')
-            engine.runAndWait()
-            save = f"{name}_unmute.mp3"
-
-            url = r"sound\{}".format(save)
-            track1 = await self.bot.wavelink.get_tracks(url)
-            await player.play(track1[0])
-            while player.is_playing:
-                await asyncio.sleep(1)
-            os.system(f'del /f "sound\{save}"')
+            elif language=='en':
+                text = f'{name} has unmuted their voice.'
+                    
+            else:
+                thai = f'{name} ได้เปิดเสียงไมค์ตัวเองกลับแล้ว'
+                text=urllib.parse.quote_plus(thai)
+                language='th'       
+             
+                url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
+                track1 = await self.bot.wavelink.get_tracks(url)
+                await player.play(track1[0])
         
         
         #---Player Deaf---#
