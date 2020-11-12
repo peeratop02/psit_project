@@ -70,7 +70,7 @@ class Music(commands.Cog):
 
     #---Disconnect Command---#
     @commands.command(aliases=['disconnect'])
-    async def disconnect(self, ctx, *):
+    async def disconnect(self, ctx):
         await player.disconnect()
 
 
