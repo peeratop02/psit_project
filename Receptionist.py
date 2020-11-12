@@ -156,25 +156,26 @@ class Music(commands.Cog):
 
 
             if language=='ja':
+                
                 jap = f'{name} nokoewomyutodesu'
+                speed = '0.5'
                 text = urllib.parse.quote_plus(jap)
 
 
             elif language=='en':
+                
+                speed = '1'
                 text = f'{name}%20has%20muted%20their%20voice'
 
 
             else:
                 thai = f'{name} ได้ปิดเสียงตัวเอง'
+                speed = '0.7'
                 text = urllib.parse.quote_plus(thai)
                 language = 'th'
 
 
-            url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
-            track1 = await self.bot.wavelink.get_tracks(url)
-            await player.play(track1[0])
-        
-        
+
         #---Player Unmute---#
         elif before.self_mute is True and after.self_mute is False:
             """unmute function"""
