@@ -68,6 +68,11 @@ class Music(commands.Cog):
         channel = ctx.author.voice.channel
         await player.connect(channel.id)
 
+    #---Disconnect Command---#
+    @commands.command(aliases=['disconnect'])
+    async def disconnect(self, ctx, *):
+        await player.disconnect()
+
 
     #---Member Action Section---#
     @commands.Cog.listener()
@@ -142,8 +147,8 @@ class Music(commands.Cog):
             await player.play(track1[0])
 
 
-        #---Unknown---#
-        elif before.channel is not None and after.channel is None and int(member.id) == 774307466720444446: 
+        #---Auto Disconnect---#
+        elif before.channel is not None and after.channel is None: 
             await player.disconnect()
 
 
