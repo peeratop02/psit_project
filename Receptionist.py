@@ -69,8 +69,10 @@ class Music(commands.Cog):
         await player.connect(channel.id)
 
     #---Disconnect Command---#
-    @commands.command(aliases=['disconnect'])
+    @commands.command(aliases=['leave'])
     async def disconnect(self, ctx):
+
+        player = self.bot.wavelink.get_player(ctx.guild.id)
         await player.disconnect()
 
 
@@ -114,20 +116,23 @@ class Music(commands.Cog):
                 #---Japanese Language---#
                 if language=='ja':
                     jap = f'{name} wahairimasu'
+                    speed = '0.5'
                     text = urllib.parse.quote_plus(jap)
 
                 #---English Language---#
                 elif language=='en':
+                    speed = '0.7'
                     text = f'{name}%20has%20joined%20your%20channel'
 
                 #---Thai Language---#
                 else:
                     thai = f'{name} ได้เข้าช่องสนทนานี้แล้ว'
                     text = urllib.parse.quote_plus(thai)
+                    speed = '1'
                     language = 'th'
 
                 #---Play File From URL---#
-                url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
+                url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed={speed}&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
                 track1 = await self.bot.wavelink.get_tracks(url)
                 await player.play(track1[0])
 
@@ -147,9 +152,9 @@ class Music(commands.Cog):
             await player.play(track1[0])
 
 
-        #---Auto Disconnect---#
-        elif before.channel is not None and after.channel is None: 
-            await player.disconnect()
+        #---Not working---#
+        elif before.channel is not None and after.channel is None and int(member.id) == 336144056260231179: 
+            await player.disconnect
 
 
         #---Player Mute---#
@@ -169,13 +174,13 @@ class Music(commands.Cog):
 
             elif language=='en':
                 
-                speed = '1'
+                speed = '0.7'
                 text = f'{name}%20has%20muted%20their%20voice'
 
 
             else:
                 thai = f'{name} ได้ปิดเสียงตัวเอง'
-                speed = '0.7'
+                speed = '1'
                 text = urllib.parse.quote_plus(thai)
                 language = 'th'
 
@@ -302,21 +307,24 @@ class context(commands.Cog):
 
 
         if language=='ja':
-            jap = f'{name} wa {text} '
+            jap = f'{name} は {text} といった'
+            speed = '0.5'
             text=urllib.parse.quote_plus(jap)
 
 
         elif language=='en':
             eng = f'{name} say {text}'
+            speed = '0.7'
             text = urllib.parse.quote_plus(eng)
 
         else:
             thai = f'{name} พูดว่า {text}'
+            speed = '1'
             text=urllib.parse.quote_plus(thai)
             language = 'th'
 
 
-        url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
+        url = f'https://translate.google.com/translate_tts?ie=UTF-8&q={text}&tl={language}&ttsspeed={speed}&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329'
         track1 = await self.bot.wavelink.get_tracks(url)
         await player.play(track1[0])
 
@@ -364,8 +372,9 @@ class context(commands.Cog):
             
            
             en=name + "has changed voice to english"
+            speed = '0.7'
             word = urllib.parse.quote_plus(en)
-            url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=en&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
+            url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=en&ttsspeed={speed}&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
             print(lang)
@@ -385,9 +394,10 @@ class context(commands.Cog):
                 lang.append(f'{str(member_channel)}:ja')
 
             ja= name + 'wanihongogakawarimashita'
+            speed = '0.5'
             word =urllib.parse.quote_plus(ja)
             
-            url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=ja&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
+            url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=ja&ttsspeed={speed}&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
             print(lang)
@@ -405,10 +415,11 @@ class context(commands.Cog):
 
 
             thai = f'{name} ได้เปลี่ยนภาษาเป็นภาษาไทย'
+            speed = '1'
             word = urllib.parse.quote_plus(thai)
             
             
-            url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=th&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
+            url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=th&ttsspeed={speed}&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
 
