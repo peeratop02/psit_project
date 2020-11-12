@@ -316,7 +316,6 @@ class context(commands.Cog):
         await player.play(track1[0])
 
 
-
     @commands.command()
     async def moverole(self, ctx, role: discord.Role, position: int):
         try:
