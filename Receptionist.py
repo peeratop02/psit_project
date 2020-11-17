@@ -1,13 +1,18 @@
+from math import dist
 import discord #-Import Discord Library
 import asyncio #-Import Asyncio Library
 import wavelink #-Import Wavelink Library
 import os #-Import OS
 import urllib #-Import Url Converter Library
+import googletrans #Import Google
+
 
 from discord.ext import commands, tasks
 from discord.utils import get
+from googletrans import Translator, constants
+from time import sleep
 
-#---List Cantain Channel That Bot Is Connected--#
+#---List Contain Channel That Bot Is Connected--#
 channels = []
 
 #---List Contain Language Settings---#
@@ -401,6 +406,54 @@ class context(commands.Cog):
             url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=th&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
             track1 = await self.bot.wavelink.get_tracks(url)
             await player.play(track1[0])
+
+
+    #---Translate Language---#
+    @commands.command(aliases=['tr'])
+    async def translate_langugae(self, ctx, *, text :str):
+
+        
+        def get_language(id :int):
+            for item in lang:
+                if str(item[:18])== str(member_channel):
+                    return str(item[19:])
+
+        member_channel=ctx.guild.id
+
+        player = self.bot.wavelink.get_player(ctx.guild.id)
+
+        language=get_language(int(ctx.guild.id))
+
+
+        def langTranslate(text,**kwargs):
+            '''Translate Funtion'''
+            translator = Translator()
+            result = None
+            lang = None
+            
+            while result == None:
+                try:
+                    result = translator.translate(text,**kwargs)
+
+                except Exception as e:
+                    translator = Translator()
+                    sleep(0.1)
+                    pass
+                
+            return result
+            
+        if language == 'ja':
+            transLangtoEn = langTranslate(text, dist='ja')
+            print(f'{transLangtoEn.text}')
+
+        elif language == 'en':
+            transLangtoEn = langTranslate(text, dist='en')
+            print(f'{transLangtoEn.text}')
+
+        else:
+            language == 'th'
+            transLangtoEn = langTranslate(text, dist='th')
+            print(f'{transLangtoEn.text}')
 
 
     #---Play Sound---$
