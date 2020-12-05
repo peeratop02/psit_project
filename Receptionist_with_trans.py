@@ -408,7 +408,7 @@ class context(commands.Cog):
             await player.play(track1[0])
 
 
-    #---Translate Language---#
+#---Translate Language---#
     @commands.command(aliases=['tr'])
     async def translate_langugae(self, ctx, *, text :str):
 
@@ -429,7 +429,6 @@ class context(commands.Cog):
             '''Translate Funtion'''
             translator = Translator()
             result = None
-            lang = None
             
             while result == None:
                 try:
@@ -447,12 +446,12 @@ class context(commands.Cog):
         def printTextonscreen(message):
             '''Print Text Function'''
             #---Append words or sentences to wordlist---#
-            wordrlist = []
+            wordlist = []
         
-            if message.author == self.user:
+            if message.author == ctx.user:
                 return
             
-            messageSend == message.content()
+            messageSend = message.content
             
             if len(messageSend) > 0:
                 wordlist.append(message)
@@ -460,14 +459,13 @@ class context(commands.Cog):
                     if word in messageSend:
                         await message.delete()
                         await message.channel.send(message)
-                        await 
                         wordlist = []
                     else:
                         break
             
         if language == 'ja':
             transLangtoJa = langTranslate(text, dist='ja')
-            printTextonscreen(tranLangtoJa)
+            printTextonscreen(transLangtoJa)
             word = urllib.parse.quote_plus(transLangtoJa)
             
             url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=ja&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
@@ -476,7 +474,7 @@ class context(commands.Cog):
             
         elif language == 'en':
             transLangtoEn = langTranslate(text, dist='en')
-            printTexttocreen(transLangtoEn)
+            printTextonscreen(transLangtoEn)
             word = urllib.parse.quote_plus(transLangtoEn)
             
             url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=ja&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
@@ -486,7 +484,7 @@ class context(commands.Cog):
         else:
             language == 'th'
             transLangtoTh = langTranslate(text, dist='th')
-            printTexttocreen(transLangtoTh)
+            printTextonscreen(transLangtoTh)
             word = urllib.parse.quote_plus(transLangtoTh)
             
             url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=ja&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
