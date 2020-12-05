@@ -441,20 +441,58 @@ class context(commands.Cog):
                     pass
                 
             return result
+        
+        
+        #---Print text on discord screen---#
+        def printTextonscreen(message):
+            '''Print Text Function'''
+            #---Append words or sentences to wordlist---#
+            wordrlist = []
+        
+            if message.author == self.user:
+                return
             
+            messageSend == message.content()
+            
+            if len(messageSend) > 0:
+                wordlist.append(message)
+                for word in wordlist:
+                    if word in messageSend:
+                        await message.delete()
+                        await message.channel.send(message)
+                        await 
+                        wordlist = []
+                    else:
+                        break
             
         if language == 'ja':
-            transLangtoEn = langTranslate(text, dist='ja')
-            print(f'{transLangtoEn.text}')
-
+            transLangtoJa = langTranslate(text, dist='ja')
+            printTextonscreen(tranLangtoJa)
+            word = urllib.parse.quote_plus(transLangtoJa)
+            
+            url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=ja&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
+            track1 = await self.bot.wavelink.get_tracks(url)
+            await player.play(track1[0])
+            
         elif language == 'en':
             transLangtoEn = langTranslate(text, dist='en')
-            print(f'{transLangtoEn.text}')
+            printTexttocreen(transLangtoEn)
+            word = urllib.parse.quote_plus(transLangtoEn)
+            
+            url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=ja&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
+            track1 = await self.bot.wavelink.get_tracks(url)
+            await player.play(track1[0])
 
         else:
             language == 'th'
-            transLangtoEn = langTranslate(text, dist='th')
-            print(f'{transLangtoEn.text}')
+            transLangtoTh = langTranslate(text, dist='th')
+            printTexttocreen(transLangtoTh)
+            word = urllib.parse.quote_plus(transLangtoTh)
+            
+            url=f"https://translate.google.com/translate_tts?ie=UTF-8&q={word}&tl=ja&ttsspeed=0.5&total=1&idx=0&client=tw-ob&textlen=5&tk=316070.156329"
+            track1 = await self.bot.wavelink.get_tracks(url)
+            await player.play(track1[0])
+
 
 
     #---Play Sound---$
