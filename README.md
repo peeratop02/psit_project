@@ -1,13 +1,13 @@
 # Receptionist bot
 
 # How it work
-  - /connect/n
+  - /connect
 The bot will be connected to the voice channel server that you’re currently joined.
 
-  - /pt/n
+  - /pt
 Receptionist bot will say your text in the voice form.
 
-  - /ps/n
+  - /ps
 Receptionist bot will play an mp3 file that is stored in the server that has a matched name with your keyword.
 
 	     - Example keyword
@@ -17,13 +17,13 @@ Receptionist bot will play an mp3 file that is stored in the server that has a m
           - sawasdee
            Bot will greet you with the comforting sound of an old man.
 
-  - /lg/n
+  - /lg
 Receptionist bot will change its voice language to the language that you choose, Now it supports 3 languages Thai, English and Japanese.
 
-  - /tr/n
+  - /tr
 Receptionist bot will use the word you typed in and translate to current Receptionist bot’s language.
 
-  - /leave/n
+  - /leave
 Receptionist bot will disconnect from the voice channel that users currently use.
 
 
