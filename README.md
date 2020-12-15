@@ -1,13 +1,13 @@
 # Receptionist bot
 
 ## How it work
-  ###/connect
+  - /connect
   The bot will be connected to the voice channel server that you’re currently joined.
 
-  ###/pt
+  - /pt
   Receptionist bot will say your text in the voice form.
 
-  ###/ps
+  - /ps
   Receptionist bot will play an mp3 file that is stored in the server that has a matched name with your keyword.
 
 	     - Example keyword
@@ -17,14 +17,24 @@
           - sawasdee
            Bot will greet you with the comforting sound of an old man.
 
-  ###/lg
+  - /lg
   Receptionist bot will change its voice language to the language that you choose, Now it supports 3 languages Thai, English and Japanese.
 
-  ###/tr
+  - /tr
   Receptionist bot will use the word you typed in and translate to current Receptionist bot’s language.
 
-  ###/leave
+  - /leave
   Receptionist bot will disconnect from the voice channel that users currently use.
+  
+  ##Developer
+  
+  |                                                                          | Student ID |      Name-Surname       |                      github                       |               Role                |
+| :----------------------------------------------------------------------: | :----------: | :---------------------: | :-----------------------------------------------: | :----------------------------------: |
+| <img src="https://avatars2.githubusercontent.com/u/29600759?s=64&v=4" width="70"> |   63070126   |   Peerawit Kongkitkul    |    [peeratop02](https://github.com/peeratop02)    | Project manager, Developer , Designer |
+| <img src="https://avatars0.githubusercontent.com/u/73655292?s=64&v=4" width="70"> |   63070135   |Panuwat Kongchansawang |      [it63070135](https://github.com/it63070135)      |          Developer          |
+| <img src="https://avatars0.githubusercontent.com/u/73688952?s=64&v=4" width="70"> |   63070174   |   Santakorn Wongsiripa    |       [63070174itkmitl](https://github.com/63070174itkmitl)       |          Developer           |
+| <img src="https://avatars2.githubusercontent.com/u/73654933?s=460&v=4" width="70"> |   63070120   | Pimmada Krunsungnoen | [Sairoong8520](https://github.com/Sairoong8520) |         Designer          |
+| <img src="https://avatars3.githubusercontent.com/u/73680261?s=460&v=4" width="70"> |   63070002   |   Kamonchet Pherai    |      [kamonchetp](https://github.com/kamonchetp)      |         Designer          |
 
 
 Get the bot at : http://receptionist.peerastudio.me
