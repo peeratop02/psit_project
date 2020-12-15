@@ -1,23 +1,29 @@
 # Receptionist bot
 ## Key Features
 ### Keep everything in touch, as what Receptionist should be
+	
 Receptionist will notify any activities when player connect / mute / unmute / deafen / undeafen
 
 ### Text-to-Speech
+	
 Receptionist can read the text user type and read it aloud.
-
+	
 ### Soundboard to troll with your friends
+	
 Receptionist can play sound from files that are stored in the server.
-
+	
 ### Multi-language support!
+	
 Receptionist can change the voice up to 3 languages Thai / English and Japanese.
-
+	
 ### Your personal dictionary
+	
 Receptionist can translate the text user input in any language and translate it to the current language.
-
+	
 ### Instant ready as you join
+	
 Receptionist will join automatically when user connect to any voice channel (Receptionist can join only 1 voice channel per server)
-
+	
 
 ## Command
   ### /connect
