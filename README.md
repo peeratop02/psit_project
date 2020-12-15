@@ -1,4 +1,5 @@
 # Receptionist bot
+## Get the bot at : http://receptionist.peerastudio.me
 ## Key Features
 ### Keep everything in touch, as what Receptionist should be
 	
@@ -62,6 +63,5 @@ Receptionist will join automatically when user connect to any voice channel (Rec
 | <img src="https://avatars3.githubusercontent.com/u/73680261?s=460&v=4" width="70"> |   63070002   |   Kamonchet Pherai    |      [kamonchetp](https://github.com/kamonchetp)      |         Designer          |
 
 
-Get the bot at : http://receptionist.peerastudio.me
 
 P.S. If you can't reach the webpage. Please change you DNS to your current service provider.
