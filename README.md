@@ -26,7 +26,7 @@
   - /leave
   Receptionist bot will disconnect from the voice channel that users currently use.
   
-  ##Developer
+  ## Developer
   
   |                                                                          | Student ID |      Name-Surname       |                      github                       |               Role                |
 | :----------------------------------------------------------------------: | :----------: | :---------------------: | :-----------------------------------------------: | :----------------------------------: |
